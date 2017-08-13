@@ -1,5 +1,10 @@
-import {Router} from 'express';
-import db from '../database';
+import { Router } from 'express';
+import allController from '../controllers/all.controller';
+import assetTypes from '../controllers/asset_types.controller';
+import capabilitiesController from '../controllers/capabilities.controller';
+import categoriesController from '../controllers/categories.controller';
+import levelsController from '../controllers/levels.controller';
+import { initialiseResponse } from '../database/initialise-db';
 
 const routes = Router();
 
@@ -7,48 +12,25 @@ const routes = Router();
  * GET home page
  */
 routes.get('/', (req, res) => {
-  res.send({title: 'Express Babel'});
+  res.send({
+    title: 'Express Babel',
+  });
 });
 
-routes.get('/all', (req, res) => {
-  const response = {
-    asset_types: [],
-    categories: [],
-  };
+routes.get('/all', allController.index);
 
-  db.getAsync('asset_types')
-    .then((result) => {
-      response.asset_types = result;
-      return db.getAsync('categories');
-    })
-    .then((result) => {
-      response.categories = result;
-      res.send(response);
-    })
-    .catch((e) => {
-      console.error(e);
-    });
-});
+routes.get('/asset_types', assetTypes.index);
+routes.post('/asset_type', assetTypes.add);
 
+routes.get('/categories', categoriesController.index);
 
-routes.get('/asset_types', (req, res) => {
-  db.getAsync('asset_types')
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((e) => {
-      console.error(e);
-    });
-});
+routes.get('/capabilities', capabilitiesController.index);
+routes.post('/capability', capabilitiesController.add);
+routes.put('/capability', capabilitiesController.update);
+routes.delete('/capability', capabilitiesController.del);
 
-routes.get('/categories', (req, res) => {
-  db.getAsync('categories')
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((e) => {
-      console.error(e);
-    });
-});
+routes.get('/levels', levelsController.index);
+
+routes.get('/initialise', initialiseResponse);
 
 export default routes;

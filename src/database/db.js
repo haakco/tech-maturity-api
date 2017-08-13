@@ -1,21 +1,20 @@
 import bluebird from 'bluebird';
 import levelup from 'levelup';
-import initialiseDB from './initialise-db';
+import isUndefined from 'lodash/isUndefined';
 
 const dbPath = `${__dirname}/techdb.db`;
 
-const db = bluebird.promisifyAll(levelup(dbPath, {
-  createIfMissing: true,
-  valueEncoding: {
-    encode: JSON.stringify,
-    decode: JSON.parse,
-  },
-}));
+let db;
+// let DataBase;
 
-db.getAsync('version')
-  .then()
-  .catch(() => {
-    initialiseDB(db);
-  });
+function DataBase() {
+  if (isUndefined(db)) {
+    db = bluebird.promisifyAll(levelup(dbPath, {
+      createIfMissing: true,
+      valueEncoding: 'json',
+    }));
+  }
+  return db;
+}
 
-export default db;
+export default DataBase;

@@ -2,6 +2,18 @@
   "extends": "airbnb-base",
   "rules": {
     "no-console": 0,
-    "quotes": ["error", "single", { "allowTemplateLiterals": true }]
+    "quotes": [
+      "error",
+      "single",
+      {
+        "allowTemplateLiterals": true
+      }
+    ],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": false
+      }
+    ]
   }
 }
