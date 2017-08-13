@@ -18,30 +18,34 @@ export default {
         {
           name: 'Code Management Strategy',
           description: '',
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 2,
           levels: [
             {
               level: 1,
-              value: 'Code is in SCM (e.g. git) and used for release, but there is little to no documented or agreed strategy of how to branch, merge, or release code',
+              value: `Code is in SCM (e.g. git) and used for release, but there is little to no documented or agreed strategy of how to branch, merge, or release code`,
             },
             {
               level: 2,
-              value: 'Develop on version branches. Every deployment can be tracked back to understand all changes which went into it by anyone in the team',
+              value: `Develop on version branches. Every deployment can be tracked back to understand all changes which went into it by anyone in the team`,
             },
             {
               level: 3,
-              value: 'Develop on feature branches that are short-lived (i.e. less than two weeks) and release from merged master',
+              value: `Develop on feature branches that are short-lived (i.e. less than two weeks) and release from merged master`,
             },
             {
               level: 4,
-              value: 'Develop and release from master with at least daily code check-ins',
+              value: `Develop and release from master with at least daily code check-ins`,
+            },
+            {
+              level: 5,
+              value: `Develop and release from master with at least daily code check-ins`,
             },
           ],
         },
         {
           name: `Test Suite`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Test Suite`,
           levels: [
             {
@@ -65,7 +69,7 @@ export default {
         {
           name: `Logging & Telemetry`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Logging & Telemetry`,
           levels: [
             {
@@ -93,7 +97,7 @@ Most issues can be diagnosed through logs and telemetry`,
         {
           name: `Backward / Forward Compatibility`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 2,
           tools: `Backward / Forward Compatibility`,
           levels: [
             {
@@ -117,7 +121,7 @@ Most issues can be diagnosed through logs and telemetry`,
         {
           name: `Monitoring & Alerting`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 2,
           tools: `Monitoring & Alerting`,
           levels: [
             {
@@ -145,7 +149,7 @@ Logs are indexed and telemetry is readily available for troubleshooting`,
         {
           name: `Build for Availability`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 2,
           tools: `Build for Availability`,
           levels: [
             {
@@ -167,9 +171,9 @@ Logs are indexed and telemetry is readily available for troubleshooting`,
           ],
         },
         {
-          name: `(nico) Developer can control/understands when a piece of code moves to the next environment in SDLC `,
+          name: `Developer can control/understands when a piece of code moves to the next environment in SDLC `,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Developer can control/understands when a piece of code moves to the next environment in SDLC `,
           levels: [
             {
@@ -198,7 +202,7 @@ Logs are indexed and telemetry is readily available for troubleshooting`,
         {
           name: `Code Quality`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 2,
           tools: `Code Quality`,
           levels: [
             {
@@ -222,7 +226,7 @@ Logs are indexed and telemetry is readily available for troubleshooting`,
         {
           name: `Security Code Analysis`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 2,
           tools: `Security Code Analysis`,
           levels: [
             {
@@ -246,7 +250,7 @@ Logs are indexed and telemetry is readily available for troubleshooting`,
         {
           name: `Automated Testing`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Automated Testing`,
           levels: [
             {
@@ -270,7 +274,7 @@ Logs are indexed and telemetry is readily available for troubleshooting`,
         {
           name: `Continuous Integration`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Continuous Integration`,
           levels: [
             {
@@ -298,7 +302,7 @@ Some failures may be missed`,
         {
           name: `Performance Testing & Capacity Planning`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Performance Testing & Capacity Planning`,
           levels: [
             {
@@ -332,7 +336,7 @@ Capacity provisioning and scaling up & down is fully automated`,
         {
           name: `Configuration File Management`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 4,
           tools: `Configuration File Management`,
           levels: [
             {
@@ -358,7 +362,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `Service Consumer Tests`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Service Consumer Tests`,
           levels: [
             {
@@ -380,9 +384,9 @@ All configurations are automated with tools that support monitoring & alerting w
           ],
         },
         {
-          name: `(nico) There is a seperate environment where delopers can test their code from where non-developer testing happens`,
+          name: `There is a seperate environment where delopers can test their code from where non-developer testing happens`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 4,
           tools: `(nico) There is a seperate environment where delopers can test their code from where non-developer testing happens`,
           levels: [
             {
@@ -412,7 +416,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `Deployment Strategy`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Deployment Strategy`,
           levels: [
             {
@@ -436,7 +440,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `Build Pipeline Traceability`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Build Pipeline Traceability`,
           levels: [
             {
@@ -460,7 +464,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `Continuous Delivery`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Continuous Delivery`,
           levels: [
             {
@@ -484,7 +488,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `Dependency Management`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Dependency Management`,
           levels: [
             {
@@ -508,7 +512,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `Push Button Releases`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Push Button Releases`,
           levels: [
             {
@@ -532,7 +536,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `Scriptable DB Releases`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 4,
           tools: `Scriptable DB Releases`,
           levels: [
             {
@@ -562,7 +566,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `DevOps Practice`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 4,
           tools: `DevOps Practice`,
           levels: [
             {
@@ -586,7 +590,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `OPS team in BU`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 4,
           tools: `OPS team in BU`,
           levels: [
             {
@@ -610,7 +614,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `Monitoring & Alerting`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Monitoring & Alerting`,
           levels: [
             {
@@ -634,7 +638,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `On-Call Strategy`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `On-Call Strategy`,
           levels: [
             {
@@ -658,7 +662,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `DR`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `DR`,
           levels: [
             {
@@ -682,7 +686,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `Log Management Strategy`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Log Management Strategy`,
           levels: [
             {
@@ -712,7 +716,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `Continuous Process Improvement`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Continuous Process Improvement`,
           levels: [
             {
@@ -736,7 +740,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `Tech Debt Management`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 2,
           tools: `Tech Debt Management`,
           levels: [
             {
@@ -760,7 +764,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `Root Cause Prevention`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 2,
           tools: `Root Cause Prevention`,
           levels: [
             {
@@ -787,7 +791,7 @@ All configurations are automated with tools that support monitoring & alerting w
         {
           name: `Data-Driven Metrics`,
           description: ``,
-          minimum_category_capability_level_id: 1,
+          minimum_category_capability_level_id: 3,
           tools: `Data-Driven Metrics`,
           levels: [
             {
