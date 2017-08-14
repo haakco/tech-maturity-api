@@ -1,6 +1,6 @@
 import asyncMiddleware from '../middleware/asyncMiddleware';
-import capabilityModel from '../model/capability.model';
-import levelModel from '../model/level.model';
+import capabilityModel from '../model/category_capability.model';
+import levelModel from '../model/category_capability_level.model';
 
 const index = asyncMiddleware(async (req, res) => {
   res.send(await levelModel.get());
@@ -8,7 +8,7 @@ const index = asyncMiddleware(async (req, res) => {
 
 const add = asyncMiddleware(async (req, res) => {
 
-  const capabilityId = req.param('capability_id');
+  const capabilityId = req.param('category_capability_id');
   const level = req.param('level');
   const value = req.param('value');
 
@@ -16,7 +16,7 @@ const add = asyncMiddleware(async (req, res) => {
 
   await levelModel.add({
     category_id: capability.category_id,
-    capability_id: capability.id,
+    category_capability_id: capability.id,
     level,
     value,
   });
@@ -25,7 +25,7 @@ const add = asyncMiddleware(async (req, res) => {
 
 const update = asyncMiddleware(async (req, res) => {
 
-  const id = req.param('level_id');
+  const id = req.param('category_capability_level_id');
 
   const level = levelModel.find(id);
 
@@ -37,7 +37,7 @@ const update = asyncMiddleware(async (req, res) => {
 });
 
 const del = asyncMiddleware(async (req, res) => {
-  const id = req.param('level_id');
+  const id = req.param('category_capability_level_id');
 
   await levelModel.delById(id);
   return index(req, res);

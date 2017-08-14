@@ -17,20 +17,20 @@ routes.get('/', (req, res) => {
   });
 });
 
-routes.get('/all', allController.index);
+routes.get('/api/all', allController.index);
 
-routes.get('/asset_types', assetTypes.index);
-routes.post('/asset_type', assetTypes.add);
+routes.get('/api/asset_type', assetTypes.index);
+routes.post('/api/asset_type', assetTypes.add);
 
-routes.get('/categories', categoriesController.index);
+routes.get('/api/category', categoriesController.index);
 
-routes.get('/capabilities', capabilitiesController.index);
-routes.post('/capability', capabilitiesController.add);
-routes.put('/capability', capabilitiesController.update);
-routes.delete('/capability', capabilitiesController.del);
+routes.get('/api/category_capability', capabilitiesController.index);
+routes.post('/api/category_capability', capabilitiesController.add);
+routes.put('/api/category_capability', capabilitiesController.update);
+routes.delete('/api/category_capability', capabilitiesController.del);
 
-routes.get('/levels', levelsController.index);
+routes.get('/api/category_capability_level', levelsController.index);
 
-routes.get('/initialise', initialiseResponse);
+routes.get('/api/initialise', initialiseResponse);
 
 export default routes;

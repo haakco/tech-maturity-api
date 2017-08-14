@@ -1,14 +1,16 @@
+import values from 'lodash/values';
 import * as uuid from 'uuid';
 import DataBase from '../database/db';
 
 let db;
 
 async function get(key) {
-  return db.getAsync(key);
+  const items = await db.getAsync(key);
+  return values(items);
 }
 
 async function find(key, id) {
-  const items = get(key);
+  const items = await db.getAsync(key);
   return items[id];
 }
 
@@ -18,7 +20,7 @@ async function add(key, item) {
   }
   item.created_at = new Date();
   item.updated_at = new Date();
-  const items = await get(key);
+  const items = await db.getAsync(key);
   items[item.id] = item;
   await db.putAsync(key, items);
   return items[item.id];

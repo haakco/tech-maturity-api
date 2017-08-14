@@ -1,12 +1,13 @@
 /* eslint-disable no-restricted-syntax,no-await-in-loop */
 import isArray from 'lodash/isArray';
 import isUndefined from 'lodash/isUndefined';
+import cloneDeep from 'lodash/cloneDeep';
 import asyncMiddleware from '../middleware/asyncMiddleware';
 import assetTypeModel from '../model/asset_type.model';
-import capabilityModel from '../model/capability.model';
+import capabilityModel from '../model/category_capability.model';
 import categoryModel from '../model/category.model';
 import dbVersion from '../model/db_version.model';
-import levelModel from '../model/level.model';
+import levelModel from '../model/category_capability_level.model';
 import allData from './migrations/allData';
 
 async function addCapability(capability) {
@@ -15,10 +16,9 @@ async function addCapability(capability) {
   const newCapability = await capabilityModel.add(capability);
 
   if (!isUndefined(levels) && isArray(levels)) {
-
     for (const level of levels) {
       level.category_id = newCapability.category_id;
-      level.capability_id = newCapability.id;
+      level.category_capability_id = newCapability.id;
       await levelModel.add(level);
     }
   }
@@ -37,12 +37,14 @@ async function addCategory(category) {
 }
 
 async function initialiseDB() {
+  const tempAllData = cloneDeep(allData);
+
   console.log('start');
   await dbVersion.setKey(1);
   console.log('set db version');
   await assetTypeModel.deleteAll();
 
-  for (const assetType of allData.asset_types) {
+  for (const assetType of tempAllData.asset_types) {
     await assetTypeModel
       .add(assetType);
   }
@@ -56,7 +58,7 @@ async function initialiseDB() {
 
   console.log('add categories type');
 
-  for (const category of allData.categories) {
+  for (const category of tempAllData.categories) {
     await addCategory(category);
   }
 }
