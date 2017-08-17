@@ -6,34 +6,35 @@ const index = asyncMiddleware(async (req, res) => {
 });
 
 const add = asyncMiddleware(async (req, res) => {
-  const name = req.param('name');
-  const description = req.param('description');
+  const name = req.body.name;
+  const description = req.body.description;
 
-  await categoryModel.add({
+  const category = await categoryModel.add({
     name,
     description,
   });
-  return index(req, res);
+  res.send(category);
 });
 
 const update = asyncMiddleware(async (req, res) => {
 
-  const id = req.param('category_id');
+  const id = req.body.category_id;
 
-  const category = categoryModel.find(id);
+  let category = await categoryModel.find(id);
 
-  category.name = req.param('name');
-  category.description = req.param('description');
+  category.name = req.body.name;
+  category.description = req.body.description;
 
-  await categoryModel.update(category);
-  return index(req, res);
+  category = await categoryModel.update(category);
+  res.send(category);
 });
 
 const del = asyncMiddleware(async (req, res) => {
-  const id = req.param('category_id');
+  const id = req.body.category_id;
 
-  await categoryModel.delById(id);
-  return index(req, res);
+  const category = await categoryModel.delById(id);
+
+  res.send(category);
 });
 
 const categoriesController = {

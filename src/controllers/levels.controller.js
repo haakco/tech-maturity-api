@@ -8,39 +8,40 @@ const index = asyncMiddleware(async (req, res) => {
 
 const add = asyncMiddleware(async (req, res) => {
 
-  const capabilityId = req.param('category_capability_id');
-  const level = req.param('level');
-  const value = req.param('value');
+  const capabilityId = req.body.category_capability_id;
+  const levelValue = req.body.level;
+  const value = req.body.value;
 
-  const capability = capabilityModel.find(capabilityId);
+  const capability = await capabilityModel.find(capabilityId);
 
-  await levelModel.add({
+  const level = await levelModel.add({
     category_id: capability.category_id,
     category_capability_id: capability.id,
-    level,
+    level: levelValue,
     value,
   });
-  return index(req, res);
+  res.send(level);
 });
 
 const update = asyncMiddleware(async (req, res) => {
 
-  const id = req.param('category_capability_level_id');
+  const id = req.body.category_capability_level_id;
 
-  const level = levelModel.find(id);
+  let level = await levelModel.find(id);
 
-  level.level = req.param('level');
-  level.value = req.param('value');
+  level.level = req.body.level;
+  level.value = req.body.value;
 
-  await levelModel.update(level);
-  return index(req, res);
+  level = await levelModel.update(level);
+
+  res.send(level);
 });
 
 const del = asyncMiddleware(async (req, res) => {
-  const id = req.param('category_capability_level_id');
+  const id = req.body.category_capability_level_id;
 
-  await levelModel.delById(id);
-  return index(req, res);
+  const level = await levelModel.delById(id);
+  res.send(level);
 });
 
 const levelsController = {

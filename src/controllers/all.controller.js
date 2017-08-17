@@ -33,7 +33,6 @@ const index = asyncMiddleware(async (req, res) => {
   response.categories = values(categories);
 
   forEach(categories, (category) => {
-    console.log(category);
     category.capabilities = values(
       filter(
         capabilities,

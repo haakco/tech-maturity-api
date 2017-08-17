@@ -1,11 +1,11 @@
 export default {
   asset_types: [
-    {
-      name: 'Product',
-    },
-    {
-      name: 'Component',
-    },
+    // {
+    //   name: 'Product',
+    // },
+    // {
+    //   name: 'Component',
+    // },
     {
       name: 'Business Unit',
     },

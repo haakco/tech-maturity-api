@@ -5,6 +5,8 @@ import capabilitiesController from '../controllers/capabilities.controller';
 import categoriesController from '../controllers/categories.controller';
 import levelsController from '../controllers/levels.controller';
 import { initialiseResponse } from '../database/initialise-db';
+import assetController from '../controllers/asset.controller';
+import assetTestController from '../controllers/asset_test.controller';
 
 const routes = Router();
 
@@ -21,6 +23,14 @@ routes.get('/api/all', allController.index);
 
 routes.get('/api/asset_type', assetTypes.index);
 routes.post('/api/asset_type', assetTypes.add);
+
+routes.get('/api/asset', assetController.index);
+routes.post('/api/asset', assetController.add);
+routes.put('/api/asset', assetController.update);
+
+routes.get('/api/asset_test', assetTestController.index);
+routes.post('/api/asset_test', assetTestController.add);
+routes.put('/api/asset_test', assetTestController.update);
 
 routes.get('/api/category', categoriesController.index);
 

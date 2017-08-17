@@ -6,39 +6,39 @@ const index = asyncMiddleware(async (req, res) => {
 });
 
 const add = asyncMiddleware(async (req, res) => {
-  const name = req.param('name');
-  const description = req.param('description');
-  const minimumCategoryCapabilityLevelId = req.param('minimum_category_capability_level_id');
-  const categoryId = req.param('category_id');
+  const name = req.body.name;
+  const description = req.body.description;
+  const minimumCategoryCapabilityLevelId = req.body.minimum_category_capability_level_id;
+  const categoryId = req.body.category_id;
 
-  await capabilityModel.add({
+  const capability = await capabilityModel.add({
     name,
     description,
     minimum_category_capability_level_id: minimumCategoryCapabilityLevelId,
     category_id: categoryId,
   });
-  return index(req, res);
+  res.send(capability);
 });
 
 const update = asyncMiddleware(async (req, res) => {
 
-  const id = req.param('category_capability_id');
+  const id = req.body.category_capability_id;
 
-  const capability = capabilityModel.find(id);
+  let capability = await capabilityModel.find(id);
 
-  capability.name = req.param('name');
-  capability.description = req.param('description');
-  capability.minimum_category_capability_level_id = req.param('minimum_category_capability_level_id');
+  capability.name = req.body.name;
+  capability.description = req.body.description;
+  capability.minimum_category_capability_level_id = req.body.minimum_category_capability_level_id;
 
-  await capabilityModel.update(capability);
-  return index(req, res);
+  capability = await capabilityModel.update(capability);
+  res.send(capability);
 });
 
 const del = asyncMiddleware(async (req, res) => {
-  const id = req.param('category_capability_id');
+  const id = req.body.category_capability_id;
 
-  await capabilityModel.delById(id);
-  return index(req, res);
+  const capability = await capabilityModel.delById(id);
+  res.send(capability);
 });
 
 const capabilitiesController = {

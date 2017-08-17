@@ -9,6 +9,8 @@ import categoryModel from '../model/category.model';
 import dbVersion from '../model/db_version.model';
 import levelModel from '../model/category_capability_level.model';
 import allData from './migrations/allData';
+import assetModel from '../model/asset.model';
+import assetTestModel from '../model/asset_test.model';
 
 async function addCapability(capability) {
   const levels = capability.levels;
@@ -39,10 +41,17 @@ async function addCategory(category) {
 async function initialiseDB() {
   const tempAllData = cloneDeep(allData);
 
+  // Clear previous
+  await assetModel.deleteAll();
+  await assetTestModel.deleteAll();
+  await assetTypeModel.deleteAll();
+  await categoryModel.deleteAll();
+  await capabilityModel.deleteAll();
+  await levelModel.deleteAll();
+
   console.log('start');
   await dbVersion.setKey(1);
   console.log('set db version');
-  await assetTypeModel.deleteAll();
 
   for (const assetType of tempAllData.asset_types) {
     await assetTypeModel
@@ -50,10 +59,6 @@ async function initialiseDB() {
   }
 
   console.log('add asset type');
-  // Clear previous
-  await categoryModel.deleteAll();
-  await capabilityModel.deleteAll();
-  await levelModel.deleteAll();
 
 
   console.log('add categories type');

@@ -6,11 +6,12 @@ const index = asyncMiddleware(async (req, res) => {
 });
 
 const add = asyncMiddleware(async (req, res) => {
-  const name = req.param('name');
-  await assetTypeModel.add({
+  const name = req.body.name;
+  const assetType = await assetTypeModel.add({
     name,
   });
-  return index(req, res);
+
+  res.send(assetType);
 });
 
 const assetTypes = {

@@ -27,15 +27,22 @@ async function add(key, item) {
 }
 
 async function update(key, item) {
+  if (!item.id) {
+    item.id = uuid.v4();
+  }
+  if (!item.created_at) {
+    item.created_at = new Date();
+  }
+
   item.updated_at = new Date();
-  const items = await get(key);
+  const items = await db.getAsync(key);
   items[item.id] = item;
   await db.putAsync(key, items);
   return items[item.id];
 }
 
 async function delById(key, id) {
-  const items = await get(key);
+  const items = await db.getAsync(key);
   const deletedItem = items[id];
   delete items[id];
   await db.putAsync(key, items);
