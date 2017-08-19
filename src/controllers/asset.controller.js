@@ -10,7 +10,7 @@ const add = asyncMiddleware(async (req, res) => {
   const assetTypeId = req.body.asset_type_id;
 
   const asset = await assetModel.add({
-    assetTypeId,
+    asset_type_id: assetTypeId,
     name,
   });
   res.send(asset);

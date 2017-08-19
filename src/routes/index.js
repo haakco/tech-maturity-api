@@ -19,7 +19,9 @@ routes.get('/', (req, res) => {
   });
 });
 
-routes.get('/api/all', allController.index);
+routes.get('/api/all', allController.all);
+routes.get('/api/all_data', allController.data);
+routes.get('/api/all_assets', allController.assets);
 
 routes.get('/api/asset_type', assetTypes.index);
 routes.post('/api/asset_type', assetTypes.add);
