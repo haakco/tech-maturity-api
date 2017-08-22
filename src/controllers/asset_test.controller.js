@@ -8,12 +8,34 @@ const index = asyncMiddleware(async (req, res) => {
 const add = asyncMiddleware(async (req, res) => {
   const assetId = req.body.asset_id;
 
-  const assetTest = await assetTestModel.add({
+  const assetTestResult = await assetTestModel.findBy({
+    asset_id: assetId,
+  });
+
+  const maxAssetTest = assetTestResult
+    .filter(assetTestItem => assetTestItem.completed_at !== null)
+    .reduce((prev, curr) => {
+      if (!curr) {
+        return prev;
+      }
+      if (!prev) {
+        return curr;
+      }
+      return prev.completed_at > curr.completed_at ? prev : curr;
+    }, null);
+
+  let assetTest = {
     asset_id: assetId,
     answered_count: 0,
     completed_at: null,
-    capabilities: {},
-  });
+    capabilities:{},
+  };
+
+  if (maxAssetTest && maxAssetTest.completed_at && maxAssetTest.completed_at !== null) {
+    assetTest.capabilities = maxAssetTest.capabilities;
+  }
+
+  assetTest = await assetTestModel.add(assetTest);
 
   res.send(assetTest);
 });

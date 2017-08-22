@@ -3,12 +3,12 @@ export default {
     // {
     //   name: 'Product',
     // },
-    // {
-    //   name: 'Component',
-    // },
     {
-      name: 'Business Unit',
+      name: 'Component',
     },
+    // {
+    //   name: 'Business Unit',
+    // },
   ],
   categories: [
     {
