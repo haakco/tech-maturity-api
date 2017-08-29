@@ -1,7 +1,9 @@
 import bodyParser from 'body-parser';
+import compression from 'compression';
 import cors from 'cors';
 import express from 'express';
-import logger from 'morgan';
+import pretty from 'express-prettify';
+import morgan from 'morgan';
 import path from 'path';
 import favicon from 'serve-favicon';
 import routes from './routes';
@@ -9,9 +11,13 @@ import routes from './routes';
 const app = express();
 app.disable('x-powered-by');
 
+app.use(compression());
+app.use(pretty({
+  query: 'pretty',
+}));
 app.use(favicon(path.join(__dirname, 'favicon', 'favicon.ico')));
 
-app.use(logger('dev', {
+app.use(morgan('dev', {
   skip: () => app.get('env') === 'test',
 }));
 

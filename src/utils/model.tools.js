@@ -1,4 +1,4 @@
-import { filter as filterLodash } from 'lodash';
+import { filter as filterLodash, find as findLodash } from 'lodash';
 import values from 'lodash/values';
 import * as uuid from 'uuid';
 import DataBase from '../database/db';
@@ -18,6 +18,11 @@ async function find(key, id) {
 async function findBy(key, searchObject) {
   const items = await db.getAsync(key);
   return filterLodash(items, searchObject);
+}
+
+async function first(key, searchObject) {
+  const items = await db.getAsync(key);
+  return findLodash(items, searchObject);
 }
 
 async function add(key, item) {
@@ -81,6 +86,7 @@ function buildModel(key) {
     get: async () => get(useKey),
     find: async id => find(useKey, id),
     findBy: async searchObject => findBy(useKey, searchObject),
+    first: async searchObject => first(useKey, searchObject),
     add: async item => add(useKey, item),
     update: async item => update(useKey, item),
     del: async item => del(useKey, item),

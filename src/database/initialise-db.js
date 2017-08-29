@@ -1,16 +1,18 @@
+import cloneDeep from 'lodash/cloneDeep';
 /* eslint-disable no-restricted-syntax,no-await-in-loop */
 import isArray from 'lodash/isArray';
+import isString from 'lodash/isString';
 import isUndefined from 'lodash/isUndefined';
-import cloneDeep from 'lodash/cloneDeep';
 import asyncMiddleware from '../middleware/asyncMiddleware';
-import assetTypeModel from '../model/asset_type.model';
-import capabilityModel from '../model/category_capability.model';
-import categoryModel from '../model/category.model';
-import dbVersion from '../model/db_version.model';
-import levelModel from '../model/category_capability_level.model';
-import allData from './migrations/allData';
 import assetModel from '../model/asset.model';
 import assetTestModel from '../model/asset_test.model';
+import assetTypeModel from '../model/asset_type.model';
+import categoryModel from '../model/category.model';
+import capabilityModel from '../model/category_capability.model';
+import levelModel from '../model/category_capability_level.model';
+import dbVersion from '../model/db_version.model';
+import allData from './migrations/allData';
+import fs from 'fs';
 
 async function addCapability(capability) {
   const levels = capability.levels;
@@ -38,9 +40,51 @@ async function addCategory(category) {
   }
 }
 
-async function initialiseDB() {
-  const tempAllData = cloneDeep(allData);
+async function addAssetTests(assetTest) {
+  const testCapabilities = assetTest.capabilities;
+  assetTest.capabilities = {};
 
+  if (!isUndefined(testCapabilities) && isArray(testCapabilities)) {
+    for (const capability of testCapabilities) {
+      const testCapability = await capabilityModel.first({
+        name: capability.capability,
+      });
+
+      if (testCapability) {
+        const testLevel = await levelModel.first({
+          value: capability.level_value,
+          category_capability_id: testCapability.id,
+        });
+
+        if (testLevel) {
+          assetTest.capabilities[testCapability.id] = testLevel.id;
+        }
+      }
+    }
+  }
+  await assetTestModel.add(assetTest);
+}
+
+async function addAssets(asset) {
+  const assetTests = asset.asset_tests;
+  const assetTypeName = asset.asset_type;
+
+  const assetType = await assetTypeModel.first({name: assetTypeName});
+  asset.asset_type_id = assetType.id;
+
+  delete asset.asset_tests;
+  delete asset.asset_type;
+  const newAsset = await assetModel.add(asset);
+  if (!isUndefined(assetTests) && isArray(assetTests)) {
+    for (const assetTest of assetTests) {
+      assetTest.asset_id = newAsset.id;
+      await addAssetTests(assetTest);
+    }
+  }
+}
+
+async function loadDb(dbData) {
+  const tempAllData = cloneDeep(dbData);
   // Clear previous
   await assetModel.deleteAll();
   await assetTestModel.deleteAll();
@@ -49,27 +93,26 @@ async function initialiseDB() {
   await capabilityModel.deleteAll();
   await levelModel.deleteAll();
 
-  console.log('start');
   await dbVersion.setKey(1);
-  console.log('set db version');
 
   for (const assetType of tempAllData.asset_types) {
     await assetTypeModel
       .add(assetType);
   }
 
-  console.log('add asset type');
-
-
-  console.log('add categories type');
-
   for (const category of tempAllData.categories) {
     await addCategory(category);
   }
+
+  if (tempAllData.assets) {
+    for (const asset of tempAllData.assets) {
+      await addAssets(asset);
+    }
+  }
 }
 
-export const initialiseResponse = asyncMiddleware(async (req, res) => {
-  initialiseDB()
+const initialiseResponse = asyncMiddleware(async (req, res) => {
+  loadDb(allData)
     .then(() => {
       res.send({
         msg: 'done',
@@ -78,5 +121,24 @@ export const initialiseResponse = asyncMiddleware(async (req, res) => {
     .catch(console.error);
 });
 
-export default initialiseDB;
+const loadDbResponse = asyncMiddleware(async (req, res) => {
+  let allDataPost = {};
+  if (isString(req.body.data)) {
+    allDataPost = JSON.parse(req.body.data);
+  } else {
+    allDataPost = req.body.data;
+  }
+  loadDb(allDataPost)
+    .then(() => {
+      res.send({
+        msg: 'done',
+      });
+    })
+    .catch(console.error);
+});
+
+export default {
+  initialiseDB: initialiseResponse,
+  loadDb: loadDbResponse,
+};
 

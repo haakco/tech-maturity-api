@@ -599,7 +599,7 @@ All configurations are automated with tools that support monitoring & alerting w
             },
             {
               level: 2,
-              value: `Dedicate BU resident(local in country and not veveloper), fufiling OPS responsability `,
+              value: `Dedicate BU resident(local in country and not developer), fulfilling OPS responsability `,
             },
             {
               level: 3,
@@ -691,11 +691,11 @@ All configurations are automated with tools that support monitoring & alerting w
           levels: [
             {
               level: 1,
-              value: `notrmal logging`,
+              value: `Normal logging`,
             },
             {
               level: 2,
-              value: `log files are kept clean and synced to ELK`,
+              value: `Log files are kept clean and synced to ELK`,
             },
             {
               level: 3,

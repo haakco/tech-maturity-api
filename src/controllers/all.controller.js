@@ -1,3 +1,4 @@
+import bluebird from 'bluebird';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import forEach from 'lodash/forEach';
@@ -9,6 +10,9 @@ import assetTypeModel from '../model/asset_type.model';
 import categoryModel from '../model/category.model';
 import capabilityModel from '../model/category_capability.model';
 import levelModel from '../model/category_capability_level.model';
+import initialiseDb from '../database/initialise-db';
+
+const fs = bluebird.promisifyAll(require('fs'));
 
 function cleanAll(item) {
   delete item.id;
@@ -70,8 +74,16 @@ async function allAssetData() {
   const assetTests = await assetTestModel.get();
   const capabilities = await capabilityModel.get();
   const levels = await levelModel.get();
+  const assetTypes = await assetTypeModel.get();
 
   forEach(response.assets, (asset) => {
+
+    const assetType = find(assetTypes, {
+      id: asset.asset_type_id,
+    });
+
+    asset.asset_type = assetType.name;
+
     asset.asset_tests = filter(assetTests, {
       asset_id: asset.id,
     }).map(cleanAll);
@@ -79,7 +91,6 @@ async function allAssetData() {
     const exportCapabilities = [];
     forEach(asset.asset_tests, (assetTest) => {
       forEach(assetTest.capabilities, (levelId, capabilityId) => {
-
         const capability = find(capabilities, {
           id: capabilityId,
         });
@@ -106,7 +117,7 @@ async function allAssetData() {
 }
 
 const data = asyncMiddleware(async (req, res) => {
-  const allData = await getAllData()
+  const allData = await getAllData();
   res.send(allData);
 });
 
@@ -116,16 +127,29 @@ const assets = asyncMiddleware(async (req, res) => {
 });
 
 const all = asyncMiddleware(async (req, res) => {
-  const allData = await getAllData()
+  const allData = await getAllData();
   const assetData = await allAssetData();
   allData.assets = assetData.assets;
+  if (req.query.download) {
+    res.set('Content-Disposition', 'attachment;filename=tmBackup.json');
+  }
   res.send(allData);
+});
+
+const upload = asyncMiddleware(async (req, res) => {
+  if (!req.body) {
+    req.body = {};
+  }
+  req.body.data = await fs.readFileAsync(req.file.path, 'utf8');
+  await fs.unlinkAsync(req.file.path);
+  return initialiseDb.loadDb(req, res);
 });
 
 const allController = {
   all,
   data,
   assets,
+  upload,
 };
 
 export default allController;
