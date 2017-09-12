@@ -28,7 +28,7 @@ const add = asyncMiddleware(async (req, res) => {
     asset_id: assetId,
     answered_count: 0,
     completed_at: null,
-    capabilities:{},
+    capabilities: {},
   };
 
   if (maxAssetTest && maxAssetTest.completed_at && maxAssetTest.completed_at !== null) {
@@ -58,10 +58,18 @@ const update = asyncMiddleware(async (req, res) => {
   res.send(assetTest);
 });
 
+const del = asyncMiddleware(async (req, res) => {
+  const testId = req.params.test_id;
+  const assetTest = await assetTestModel.find(testId);
+  await assetTestModel.del(assetTest);
+  res.send(assetTest);
+});
+
 const assetTestController = {
   index,
   add,
   update,
+  del,
 };
 
 export default assetTestController;

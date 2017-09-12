@@ -36,6 +36,7 @@ routes.put('/api/asset', assetController.update);
 routes.get('/api/asset_test', assetTestController.index);
 routes.post('/api/asset_test', assetTestController.add);
 routes.put('/api/asset_test', assetTestController.update);
+routes.delete('/api/asset_test/:test_id', assetTestController.del);
 
 routes.get('/api/category', categoriesController.index);
 
