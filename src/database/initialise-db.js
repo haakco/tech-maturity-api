@@ -99,8 +99,8 @@ async function loadDb(dbData) {
     }
   }
 
-  if (tempAllData.assetGroups) {
-    for (const assetGroup of tempAllData.assetGroups) {
+  if (tempAllData.asset_groups) {
+    for (const assetGroup of tempAllData.asset_groups) {
       await assetGroupModel.add(assetGroup);
     }
   }

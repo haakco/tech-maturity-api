@@ -119,6 +119,7 @@ const all = asyncMiddleware(async (req, res) => {
   const allData = await getAllData();
   const assetData = await allAssetData();
   allData.assets = assetData.assets;
+  allData.asset_groups = assetData.asset_groups;
   if (req.query.download) {
     res.set('Content-Disposition', 'attachment;filename=tmBackup.json');
   }
