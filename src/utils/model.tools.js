@@ -6,22 +6,42 @@ import DataBase from '../database/db';
 let db;
 
 async function get(key) {
-  const items = await db.getAsync(key);
+  let items = {};
+  try {
+    items = await db.getAsync(key);
+  } catch (e) {
+    console.error(e);
+  }
   return values(items);
 }
 
 async function find(key, id) {
-  const items = await db.getAsync(key);
+  let items = {};
+  try {
+    items = await db.getAsync(key);
+  } catch (e) {
+    console.error(e);
+  }
   return items[id];
 }
 
 async function findBy(key, searchObject) {
-  const items = await db.getAsync(key);
+  let items = {};
+  try {
+    items = await db.getAsync(key);
+  } catch (e) {
+    console.error(e);
+  }
   return filterLodash(items, searchObject);
 }
 
 async function first(key, searchObject) {
-  const items = await db.getAsync(key);
+  let items = {};
+  try {
+    items = await db.getAsync(key);
+  } catch (e) {
+    console.error(e);
+  }
   return findLodash(items, searchObject);
 }
 
@@ -29,9 +49,21 @@ async function add(key, item) {
   if (!item.id) {
     item.id = uuid.v4();
   }
-  item.created_at = new Date();
-  item.updated_at = new Date();
-  const items = await db.getAsync(key);
+
+  const currentDate = new Date();
+
+  if (!item.created_at || item.created_at > currentDate) {
+    item.created_at = currentDate;
+  }
+
+  item.updated_at = currentDate;
+  let items = {};
+  try {
+    items = await db.getAsync(key);
+  } catch (e) {
+    console.error(e);
+  }
+
   items[item.id] = item;
   await db.putAsync(key, items);
   return items[item.id];

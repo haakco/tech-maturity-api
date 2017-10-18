@@ -1,9 +1,4 @@
 export default {
-  asset_types: [
-    {
-      name: 'Component',
-    },
-  ],
   categories: [
     {
       name: 'Code',

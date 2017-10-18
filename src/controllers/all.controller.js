@@ -1,25 +1,20 @@
 import bluebird from 'bluebird';
-import filter from 'lodash/filter';
-import find from 'lodash/find';
-import forEach from 'lodash/forEach';
-import values from 'lodash/values';
+import { filter as lodashFilter, find as lodashFind, forEach as lodashForeach, values as lodashValues } from 'lodash';
+import initialiseDb from '../database/initialise-db';
 import asyncMiddleware from '../middleware/asyncMiddleware';
 import assetModel from '../model/asset.model';
+import assetGroupModel from '../model/asset_group.model';
 import assetTestModel from '../model/asset_test.model';
-import assetTypeModel from '../model/asset_type.model';
 import categoryModel from '../model/category.model';
 import capabilityModel from '../model/category_capability.model';
 import levelModel from '../model/category_capability_level.model';
-import initialiseDb from '../database/initialise-db';
 
 const fs = bluebird.promisifyAll(require('fs'));
 
 function cleanAll(item) {
   delete item.id;
-  delete item.created_at;
   delete item.updated_at;
   delete item.asset_id;
-  delete item.asset_type_id;
   delete item.category_id;
   delete item.category_capability_id;
   return item;
@@ -27,34 +22,31 @@ function cleanAll(item) {
 
 async function getAllData() {
   const response = {
-    asset_types: {},
     categories: {},
   };
 
-  const assetType = await assetTypeModel.get();
   const categories = await categoryModel.get();
   const capabilities = await capabilityModel.get();
   const levels = await levelModel.get();
 
-  response.asset_types = values(assetType)
-    .map(cleanAll);
+  response.categories = lodashValues(categories);
 
-  response.categories = values(categories);
-
-  forEach(categories, (category) => {
-    category.capabilities = values(
-      filter(
+  lodashForeach(categories, (category) => {
+    category.capabilities = lodashValues(
+      lodashFilter(
         capabilities,
-        capability => capability.category_id === category.id),
-    );
+        capability => capability.category_id === category.id,
+      ));
 
-    forEach(
+    lodashForeach(
       category.capabilities,
       (capability) => {
-        capability.levels = values(
-          filter(levels, level => level.category_capability_id === capability.id))
+        capability.levels = lodashValues(
+          lodashFilter(levels, level => level.category_capability_id === capability.id))
           .map(cleanAll);
-      });
+      },
+    );
+
     category.capabilities
       .map(cleanAll);
   });
@@ -68,34 +60,29 @@ async function getAllData() {
 async function allAssetData() {
   const response = {
     assets: {},
+    asset_groups: {},
   };
 
   response.assets = await assetModel.get();
+  response.asset_groups = await assetGroupModel.get();
+  response.asset_groups.map(cleanAll);
   const assetTests = await assetTestModel.get();
   const capabilities = await capabilityModel.get();
   const levels = await levelModel.get();
-  const assetTypes = await assetTypeModel.get();
 
-  forEach(response.assets, (asset) => {
-
-    const assetType = find(assetTypes, {
-      id: asset.asset_type_id,
-    });
-
-    asset.asset_type = assetType.name;
-
-    asset.asset_tests = filter(assetTests, {
+  lodashForeach(response.assets, (asset) => {
+    asset.asset_tests = lodashFilter(assetTests, {
       asset_id: asset.id,
     }).map(cleanAll);
 
     const exportCapabilities = [];
-    forEach(asset.asset_tests, (assetTest) => {
-      forEach(assetTest.capabilities, (levelId, capabilityId) => {
-        const capability = find(capabilities, {
+    lodashForeach(asset.asset_tests, (assetTest) => {
+      lodashForeach(assetTest.capabilities, (levelId, capabilityId) => {
+        const capability = lodashFind(capabilities, {
           id: capabilityId,
         });
 
-        const level = find(levels, {
+        const level = lodashFind(levels, {
           id: levelId,
         });
 
@@ -113,6 +100,8 @@ async function allAssetData() {
 
   response.assets
     .map(cleanAll);
+
+
   return response;
 }
 

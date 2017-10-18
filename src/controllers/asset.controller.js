@@ -7,10 +7,19 @@ const index = asyncMiddleware(async (req, res) => {
 
 const add = asyncMiddleware(async (req, res) => {
   const name = req.body.name;
-  const assetTypeId = req.body.asset_type_id;
+
+  const assetResult = await assetModel.findBy({
+    name,
+  });
+
+  if (assetResult.length > 0) {
+    res.status(422);
+    return res.send({
+      err: `Duplicate name`,
+    });
+  }
 
   const asset = await assetModel.add({
-    asset_type_id: assetTypeId,
     name,
   });
   res.send(asset);
@@ -23,6 +32,9 @@ const update = asyncMiddleware(async (req, res) => {
   let asset = await assetModel.find(id);
 
   asset.name = req.body.name;
+  if (asset.asset_type_id) {
+    delete asset.asset_type_id;
+  }
   asset = await assetModel.update(asset);
   res.send(asset);
 });

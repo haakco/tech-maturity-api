@@ -5,14 +5,13 @@ import isString from 'lodash/isString';
 import isUndefined from 'lodash/isUndefined';
 import asyncMiddleware from '../middleware/asyncMiddleware';
 import assetModel from '../model/asset.model';
+import assetGroupModel from '../model/asset_group.model';
 import assetTestModel from '../model/asset_test.model';
-import assetTypeModel from '../model/asset_type.model';
 import categoryModel from '../model/category.model';
 import capabilityModel from '../model/category_capability.model';
 import levelModel from '../model/category_capability_level.model';
 import dbVersion from '../model/db_version.model';
 import allData from './migrations/allData';
-import fs from 'fs';
 
 async function addCapability(capability) {
   const levels = capability.levels;
@@ -67,13 +66,8 @@ async function addAssetTests(assetTest) {
 
 async function addAssets(asset) {
   const assetTests = asset.asset_tests;
-  const assetTypeName = asset.asset_type;
-
-  const assetType = await assetTypeModel.first({name: assetTypeName});
-  asset.asset_type_id = assetType.id;
 
   delete asset.asset_tests;
-  delete asset.asset_type;
   const newAsset = await assetModel.add(asset);
   if (!isUndefined(assetTests) && isArray(assetTests)) {
     for (const assetTest of assetTests) {
@@ -87,18 +81,13 @@ async function loadDb(dbData) {
   const tempAllData = cloneDeep(dbData);
   // Clear previous
   await assetModel.deleteAll();
+  await assetGroupModel.deleteAll();
   await assetTestModel.deleteAll();
-  await assetTypeModel.deleteAll();
   await categoryModel.deleteAll();
   await capabilityModel.deleteAll();
   await levelModel.deleteAll();
 
   await dbVersion.setKey(1);
-
-  for (const assetType of tempAllData.asset_types) {
-    await assetTypeModel
-      .add(assetType);
-  }
 
   for (const category of tempAllData.categories) {
     await addCategory(category);
@@ -107,6 +96,12 @@ async function loadDb(dbData) {
   if (tempAllData.assets) {
     for (const asset of tempAllData.assets) {
       await addAssets(asset);
+    }
+  }
+
+  if (tempAllData.assetGroups) {
+    for (const assetGroup of tempAllData.assetGroups) {
+      await assetGroupModel.add(assetGroup);
     }
   }
 }
