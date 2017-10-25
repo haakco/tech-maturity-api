@@ -1,4 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep';
+import find from 'lodash/find';
 /* eslint-disable no-restricted-syntax,no-await-in-loop */
 import isArray from 'lodash/isArray';
 import isString from 'lodash/isString';
@@ -100,8 +101,48 @@ async function loadDb(dbData) {
   }
 
   if (tempAllData.asset_groups) {
+    const assetGroupGroupsTemp = [];
     for (const assetGroup of tempAllData.asset_groups) {
-      await assetGroupModel.add(assetGroup);
+      const newAssetGroup = {
+        name: assetGroup.name,
+        assets: [],
+        sub_groups: [],
+        created_at: assetGroup.created_at,
+      };
+      const assetModels = assetModel.get();
+      newAssetGroup.assets = assetGroup.assets
+        .map((assetName) => {
+          const asset = find(assetModels, { name: assetName });
+          if (asset) {
+            return asset.id;
+          }
+          return null;
+        })
+        .filter(assetId => assetId !== null);
+
+      const tempAssetGroup = await assetGroupModel.add(newAssetGroup);
+      if (assetGroup.sub_groups.length > 0) {
+        assetGroupGroupsTemp.push({
+          tempAssetGroup,
+          sub_groups: assetGroup.sub_groups,
+        });
+      }
+    }
+
+    if (assetGroupGroupsTemp.length > 0) {
+      const assetGroups = await assetGroupModel.get();
+      for (const assetGroupGroupInfo of assetGroupGroupsTemp) {
+        const assetGroupGroupIds = assetGroupGroupInfo.sub_groups.map(
+          (assetGroupName) => {
+            const assetGroup = find(assetGroups, { name: assetGroupName });
+            if (assetGroup) {
+              return assetGroup.id;
+            }
+            return null;
+          }).filter(assetGroupId => assetGroupId !== null);
+        assetGroupGroupInfo.tempAssetGroup.sub_groups = assetGroupGroupIds;
+        await assetGroupModel.update(assetGroupGroupInfo.tempAssetGroup);
+      }
     }
   }
 }

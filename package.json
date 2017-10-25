@@ -4,10 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon -w src --exec \"babel-node src --presets env\"",
-    "build": "babel src -s -D -d dist --presets env",
+    "dev": "./node_modules/.bin/nodemon -w src --exec \"babel-node src --presets env\"",
+    "build": "./node_modules/.bin/babel src -s -D -d dist --presets env",
     "start": "npm run dev",
-    "start-prod": "npm run dist",
+    "start-prod": "node dist",
     "test": "eslint src"
   },
   "dependencies": {

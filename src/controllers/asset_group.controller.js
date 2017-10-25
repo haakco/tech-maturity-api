@@ -4,8 +4,6 @@ import assetModel from '../model/asset.model';
 import assetGroupModel from '../model/asset_group.model';
 
 const index = asyncMiddleware(async (req, res) => {
-  // assetGroupModel.deleteAll();
-  // console.log(await assetGroupModel.get());
   res.send(await assetGroupModel.get());
 });
 

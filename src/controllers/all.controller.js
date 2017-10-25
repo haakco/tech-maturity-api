@@ -64,7 +64,27 @@ async function allAssetData() {
   };
 
   response.assets = await assetModel.get();
-  response.asset_groups = await assetGroupModel.get();
+  const assetGroups = await assetGroupModel.get();
+
+  response.asset_groups =
+    assetGroups
+      .map((assetGroup) => {
+        const result = {
+          name: assetGroup.name,
+          assets: [],
+          sub_groups: [],
+          created_at: assetGroup.created_at,
+        };
+        result.assets = assetGroup.assets
+          .map((assetId) => {
+            return lodashFind(response.assets, { id: assetId }).name;
+          });
+        result.sub_groups = assetGroup.sub_groups
+          .map((assetGroupId) => {
+            return lodashFind(assetGroups, { id: assetGroupId }).name;
+          });
+        return result;
+      });
   response.asset_groups.map(cleanAll);
   const assetTests = await assetTestModel.get();
   const capabilities = await capabilityModel.get();
