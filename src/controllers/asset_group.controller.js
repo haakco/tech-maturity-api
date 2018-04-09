@@ -1,6 +1,5 @@
 import { uniq as lodashUniq } from 'lodash';
 import asyncMiddleware from '../middleware/asyncMiddleware';
-import assetModel from '../model/asset.model';
 import assetGroupModel from '../model/asset_group.model';
 
 const index = asyncMiddleware(async (req, res) => {
